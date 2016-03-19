@@ -9,7 +9,9 @@
 import UIKit
 
 class DrawView: UIView {
-  // var currentLine: Line?
+  var currentColor = UIColor.blackColor()
+  var currentTool = Tool.LineTool
+  
   var currentLines:[NSValue:Line] = [:]
   var finishedLines: [Line] = []
   var selectedLineIndex: Int? {
@@ -20,12 +22,18 @@ class DrawView: UIView {
     }
   }
   
+  //-----------------------------------------------------------------------------
+  // Initializer
+  //-----------------------------------------------------------------------------
   convenience init() {
     self.init(frame: UIScreen.mainScreen().bounds)
     self.backgroundColor = UIColor.whiteColor()
 
     self.multipleTouchEnabled = true
-
+    setupGestureRecognizers()
+  }
+  
+  func setupGestureRecognizers() {
     let doubleTapRecognizer = UITapGestureRecognizer(target: self, action: "doubleTap:")
     doubleTapRecognizer.numberOfTapsRequired = 2
     doubleTapRecognizer.delaysTouchesBegan = true
@@ -38,8 +46,10 @@ class DrawView: UIView {
     addGestureRecognizer(tapRecognizer)
   }
 
-
-  func strokeLine(line: Line) {
+  //-----------------------------------------------------------------------------
+  // Internal API
+  //-----------------------------------------------------------------------------
+  private func strokeLine(line: Line) {
     let path = UIBezierPath()
     path.lineWidth = 10
     path.lineCapStyle = CGLineCap.Round
@@ -49,7 +59,7 @@ class DrawView: UIView {
     path.stroke()
   }
   
-  func indexOfLineAtPoint(point: CGPoint) -> Int? {
+  private func indexOfLineAtPoint(point: CGPoint) -> Int? {
     for (i, line) in finishedLines.enumerate() {
       let (begin, end) = line.points()
 
@@ -67,7 +77,7 @@ class DrawView: UIView {
     return nil
   }
 
-  func deleteLine(sender: AnyObject) {
+  private func deleteLine(sender: AnyObject) {
     if let index = selectedLineIndex {
       finishedLines.removeAtIndex(index)
       selectedLineIndex = nil
@@ -108,27 +118,37 @@ class DrawView: UIView {
     selectedLineIndex = nil
     setNeedsDisplay()
   }
+
+  //-----------------------------------------------------------------------------
+  // Delegates
+  //-----------------------------------------------------------------------------
+  func setTool(tool: Tool) {
+    print("DrawView#setTool called with \(tool)")
+  }
+  
+  func setColor(color: UIColor) {
+    print("DrawView#setColor called with \(color)")
+    currentColor = color
+  }
   
   //----------------------------------------------------------------------------
   // UIView overrides
   //----------------------------------------------------------------------------
-  
   override func canBecomeFirstResponder() -> Bool {
     return true
   }
   
   //----------------------------------------------------------------------- Draw
   override func drawRect(rect: CGRect) {
-    UIColor.blackColor().setStroke()
-    
     // finished
     for line in finishedLines {
+      line.color.setStroke()
       strokeLine(line)
     }
     
     // current
     for line in currentLines.values {
-      UIColor.redColor().setStroke()
+      line.color.colorWithAlphaComponent(0.5).setStroke()
       strokeLine(line)
     }
     
@@ -144,7 +164,7 @@ class DrawView: UIView {
   override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
     for touch in touches {
       let location = touch.locationInView(self)
-      let newLine = Line(begin: location, end: location)
+      let newLine = Line(begin: location, end: location, color: currentColor)
 
       let key = NSValue(nonretainedObject: touch)
       currentLines[key] = newLine

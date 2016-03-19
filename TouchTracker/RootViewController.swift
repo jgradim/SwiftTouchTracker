@@ -8,13 +8,6 @@
 
 import UIKit
 
-class RootViewController: UIViewController {
-
-  override func viewDidLoad() {
-    super.viewDidLoad()
-    view.backgroundColor = UIColor.whiteColor()
-    view.addSubview(DrawView())
-  }
-
+class RootViewController: UINavigationController {
 }
 

@@ -8,10 +8,12 @@
 
 import Foundation
 import CoreGraphics
+import UIKit
 
 struct Line {
   var begin = CGPoint.zero
   var end = CGPoint.zero
+  var color = UIColor.blackColor()
 
   func points() -> (CGPoint, CGPoint) {
     return (begin, end)
