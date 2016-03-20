@@ -8,9 +8,9 @@
 
 import Foundation
 
-enum Tool {
+enum Tool: String {
   case LineTool
   case FreeLineTool
-  case SquareTool
+  case RectangleTool
   case CircleTool
 }

@@ -12,15 +12,16 @@ class DrawView: UIView {
   var currentColor = UIColor.blackColor()
   var currentTool = Tool.LineTool
   
-  var currentLines:[NSValue:Line] = [:]
-  var finishedLines: [Line] = []
-  var selectedLineIndex: Int? {
-    didSet {
-      if selectedLineIndex == nil {
-        UIMenuController.sharedMenuController().setMenuVisible(false, animated: true)
-      }
-    }
-  }
+  var drawables: [Drawable] = []
+  var currentDrawables: [NSValue:Drawable] = [:]
+  
+  // var selectedLineIndex: Int? {
+  //   didSet {
+  //     if selectedLineIndex == nil {
+  //       UIMenuController.sharedMenuController().setMenuVisible(false, animated: true)
+  //     }
+  //   }
+  // }
   
   //-----------------------------------------------------------------------------
   // Initializer
@@ -49,74 +50,64 @@ class DrawView: UIView {
   //-----------------------------------------------------------------------------
   // Internal API
   //-----------------------------------------------------------------------------
-  private func strokeLine(line: Line) {
-    let path = UIBezierPath()
-    path.lineWidth = 10
-    path.lineCapStyle = CGLineCap.Round
-    
-    path.moveToPoint(line.begin)
-    path.addLineToPoint(line.end)
-    path.stroke()
-  }
   
   private func indexOfLineAtPoint(point: CGPoint) -> Int? {
-    for (i, line) in finishedLines.enumerate() {
-      let (begin, end) = line.points()
+    // for (i, line) in finishedLines.enumerate() {
+    //   let (begin, end) = line.points()
 
-      for t in CGFloat(0).stride(to: 1, by: 0.05) {
-        let x = begin.x + ((end.x - begin.x) * t)
-        let y = begin.y + ((end.y - begin.y) * t)
+    //   for t in CGFloat(0).stride(to: 1, by: 0.05) {
+    //     let x = begin.x + ((end.x - begin.x) * t)
+    //     let y = begin.y + ((end.y - begin.y) * t)
 
-        // If the tapped point is within 20 points, let's return this line
-        if hypot(x - point.x, y - point.y) < 20.0 {
-          return i
-        }
-      }
-    }
+    //     // If the tapped point is within 20 points, let's return this line
+    //     if hypot(x - point.x, y - point.y) < 20.0 {
+    //       return i
+    //     }
+    //   }
+    // }
 
     return nil
   }
 
   private func deleteLine(sender: AnyObject) {
-    if let index = selectedLineIndex {
-      finishedLines.removeAtIndex(index)
-      selectedLineIndex = nil
+    // if let index = selectedLineIndex {
+    //   finishedLines.removeAtIndex(index)
+    //   selectedLineIndex = nil
 
-      setNeedsDisplay()
-    }
+    //   setNeedsDisplay()
+    // }
   }
 
   //----------------------------------------------------------------------------
   // Gesture recognizers
   //----------------------------------------------------------------------------
   func tap(gestureRecognizer: UIGestureRecognizer) {
-    print("recognized single tap")
-      
-    let point = gestureRecognizer.locationInView(self)
-    selectedLineIndex = indexOfLineAtPoint(point)
-      
-    let menu = UIMenuController.sharedMenuController()
-    if selectedLineIndex != nil {
-      becomeFirstResponder()
-      
-      menu.menuItems = [
-        UIMenuItem(title: "Delete", action: "deleteLine:")
-      ]
-      
-      menu.setTargetRect(CGRect(x: point.x, y: point.y, width: 2, height: 2), inView: self)
-      menu.setMenuVisible(true, animated: true)
-    }
-    
-    setNeedsDisplay()
+    // print("recognized single tap")
+    //   
+    // let point = gestureRecognizer.locationInView(self)
+    // selectedLineIndex = indexOfLineAtPoint(point)
+    //   
+    // let menu = UIMenuController.sharedMenuController()
+    // if selectedLineIndex != nil {
+    //   becomeFirstResponder()
+    //   
+    //   menu.menuItems = [
+    //     UIMenuItem(title: "Delete", action: "deleteLine:")
+    //   ]
+    //   
+    //   menu.setTargetRect(CGRect(x: point.x, y: point.y, width: 2, height: 2), inView: self)
+    //   menu.setMenuVisible(true, animated: true)
+    // }
+    // 
+    // setNeedsDisplay()
   }
 
   func doubleTap(gestureRecognizer: UIGestureRecognizer) {
-    print("recognized a double tap")
+     print("recognized a double tap")
 
-    currentLines.removeAll(keepCapacity: false)
-    finishedLines.removeAll(keepCapacity: false)
-    selectedLineIndex = nil
-    setNeedsDisplay()
+     drawables.removeAll(keepCapacity: false)
+     currentDrawables.removeAll(keepCapacity: false)
+     setNeedsDisplay()
   }
 
   //-----------------------------------------------------------------------------
@@ -124,6 +115,7 @@ class DrawView: UIView {
   //-----------------------------------------------------------------------------
   func setTool(tool: Tool) {
     print("DrawView#setTool called with \(tool)")
+    currentTool = tool
   }
   
   func setColor(color: UIColor) {
@@ -141,33 +133,31 @@ class DrawView: UIView {
   //----------------------------------------------------------------------- Draw
   override func drawRect(rect: CGRect) {
     // finished
-    for line in finishedLines {
-      line.color.setStroke()
-      strokeLine(line)
-    }
-    
-    // current
-    for line in currentLines.values {
-      line.color.colorWithAlphaComponent(0.5).setStroke()
-      strokeLine(line)
-    }
-    
-    // selected
-    if let index = selectedLineIndex {
-      UIColor.greenColor().setStroke()
-      let selectedLine = finishedLines[index]
-      strokeLine(selectedLine)
-    }
+    drawables.forEach{ $0.draw() }
   }
   
   //-------------------------------------------------------------------- Touches
   override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
     for touch in touches {
-      let location = touch.locationInView(self)
-      let newLine = Line(begin: location, end: location, color: currentColor)
-
+      var drawable: Drawable!
+      
+      switch currentTool {
+      case .LineTool:
+        drawable = Line()
+      case .RectangleTool:
+        drawable = Rectangle()
+      case .CircleTool:
+        drawable = Circle()
+      default:
+        return
+      }
+      
+      drawable.begin(touch.locationInView(self))
+      drawable.color = currentColor
+      
       let key = NSValue(nonretainedObject: touch)
-      currentLines[key] = newLine
+      currentDrawables[key] = drawable
+      drawables.append(drawable)
     }
     
     setNeedsDisplay()
@@ -176,21 +166,21 @@ class DrawView: UIView {
   override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
     for touch in touches {
       let key = NSValue(nonretainedObject: touch)
-      currentLines[key]?.end = touch.locationInView(self)
+      currentDrawables[key]?.move(touch.locationInView(self))
+      print(currentDrawables)
     }
     
     setNeedsDisplay()
   }
   
   override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    print("touchesEnded")
     for touch in touches {
       let key = NSValue(nonretainedObject: touch)
       
-      if var line = currentLines[key] {
-        line.end = touch.locationInView(self)
-
-        finishedLines.append(line)
-        currentLines.removeValueForKey(key)
+      if var d = currentDrawables[key] {
+        d.end(touch.locationInView(self))
+        currentDrawables.removeValueForKey(key)
       }
     }
 
@@ -198,7 +188,7 @@ class DrawView: UIView {
   }
 
   override func touchesCancelled(touches: Set<UITouch>?, withEvent event: UIEvent?) {
-    currentLines.removeAll()
+    currentDrawables.removeAll()
     
     setNeedsDisplay()
   }

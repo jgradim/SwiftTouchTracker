@@ -27,7 +27,7 @@ class DrawViewController: UIViewController {
     // tools bar
     toolBarView = UISegmentedControl(items: [
       "Line",
-      "Square",
+      "Rectangle",
       "Circle",
     ])
     toolBarView.selectedSegmentIndex = 0
@@ -61,7 +61,7 @@ class DrawViewController: UIViewController {
   func setTool(sender: AnyObject?) {
     let selectedTool = [
       Tool.LineTool,
-      Tool.SquareTool,
+      Tool.RectangleTool,
       Tool.CircleTool,
     ][toolBarView.selectedSegmentIndex]
     

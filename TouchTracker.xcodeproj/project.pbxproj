@@ -7,8 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AE5B13291C9DC30900C95B6A /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE5B13281C9DC30900C95B6A /* UIColor.swift */; };
+		AE5B132B1C9DD38700C95B6A /* Circle.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE5B132A1C9DD38700C95B6A /* Circle.swift */; };
+		AE62ADE91C9CF09E00E929FC /* Drawable.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE62ADE81C9CF09E00E929FC /* Drawable.swift */; };
 		AE96A4491C9CB8610061AE6C /* Tool.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE96A4481C9CB8610061AE6C /* Tool.swift */; };
-		AE96A44E1C9CB9460061AE6C /* Square.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE96A44D1C9CB9460061AE6C /* Square.swift */; };
+		AE96A44E1C9CB9460061AE6C /* Rectangle.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE96A44D1C9CB9460061AE6C /* Rectangle.swift */; };
 		AE96A4511C9CBD1B0061AE6C /* DrawViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE96A4501C9CBD1B0061AE6C /* DrawViewController.swift */; };
 		AEC883181C9B1C4800487910 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEC883171C9B1C4800487910 /* AppDelegate.swift */; };
 		AEC8831A1C9B1C4800487910 /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEC883191C9B1C4800487910 /* RootViewController.swift */; };
@@ -19,8 +22,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		AE5B13281C9DC30900C95B6A /* UIColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
+		AE5B132A1C9DD38700C95B6A /* Circle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Circle.swift; sourceTree = "<group>"; };
+		AE62ADE81C9CF09E00E929FC /* Drawable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Drawable.swift; sourceTree = "<group>"; };
 		AE96A4481C9CB8610061AE6C /* Tool.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tool.swift; sourceTree = "<group>"; };
-		AE96A44D1C9CB9460061AE6C /* Square.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Square.swift; sourceTree = "<group>"; };
+		AE96A44D1C9CB9460061AE6C /* Rectangle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Rectangle.swift; sourceTree = "<group>"; };
 		AE96A4501C9CBD1B0061AE6C /* DrawViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawViewController.swift; sourceTree = "<group>"; };
 		AEC883141C9B1C4800487910 /* TouchTracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TouchTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AEC883171C9B1C4800487910 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -43,6 +49,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AE5B13271C9DC2F800C95B6A /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				AE5B13281C9DC30900C95B6A /* UIColor.swift */,
+			);
+			name = Extensions;
+			path = ..;
+			sourceTree = "<group>";
+		};
+		AE62ADEA1C9CF0A300E929FC /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				AE62ADE81C9CF09E00E929FC /* Drawable.swift */,
+			);
+			name = Protocols;
+			sourceTree = "<group>";
+		};
 		AE96A44A1C9CB8EC0061AE6C /* Enums */ = {
 			isa = PBXGroup;
 			children = (
@@ -63,7 +86,8 @@
 			isa = PBXGroup;
 			children = (
 				AEC883291C9B1CF300487910 /* Line.swift */,
-				AE96A44D1C9CB9460061AE6C /* Square.swift */,
+				AE96A44D1C9CB9460061AE6C /* Rectangle.swift */,
+				AE5B132A1C9DD38700C95B6A /* Circle.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -96,7 +120,9 @@
 		AEC883161C9B1C4800487910 /* TouchTracker */ = {
 			isa = PBXGroup;
 			children = (
+				AE5B13271C9DC2F800C95B6A /* Extensions */,
 				AEC883171C9B1C4800487910 /* AppDelegate.swift */,
+				AE62ADEA1C9CF0A300E929FC /* Protocols */,
 				AE96A44A1C9CB8EC0061AE6C /* Enums */,
 				AE96A44C1C9CB9150061AE6C /* Models */,
 				AE96A44F1C9CBB6E0061AE6C /* ViewControllers */,
@@ -178,9 +204,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AE96A44E1C9CB9460061AE6C /* Square.swift in Sources */,
+				AE96A44E1C9CB9460061AE6C /* Rectangle.swift in Sources */,
 				AEC8832A1C9B1CF300487910 /* Line.swift in Sources */,
 				AEC8831A1C9B1C4800487910 /* RootViewController.swift in Sources */,
+				AE62ADE91C9CF09E00E929FC /* Drawable.swift in Sources */,
+				AE5B13291C9DC30900C95B6A /* UIColor.swift in Sources */,
+				AE5B132B1C9DD38700C95B6A /* Circle.swift in Sources */,
 				AEC8832C1C9B1D1E00487910 /* DrawView.swift in Sources */,
 				AE96A4511C9CBD1B0061AE6C /* DrawViewController.swift in Sources */,
 				AE96A4491C9CB8610061AE6C /* Tool.swift in Sources */,
